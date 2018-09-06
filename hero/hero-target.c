@@ -16,6 +16,7 @@
 
 #include <hero-target.h>
 #include <hal/pulp.h>
+#include <libgomp/pulp/memutils.h>
 #include <archi-host/arm/pgtable_hwdef.h>
 
 unsigned int
@@ -42,24 +43,24 @@ hero_trywrite_prefetch(unsigned int* const addr)
   return pulp_trywrite_prefetch(addr);
 }
 
-int 
+hero_dma_job_t 
 hero_dma_memcpy_async(void *dst, void *src, int size)
 {
   int ext2loc;
   unsigned int ext_addr_tmp, ext_addr, loc_addr;
 
-  if ((unsigned int) dst < ARCHI_CLUSTER_ADDR &&
-      (unsigned int) dst > (ARCHI_CLUSTER_ADDR + ARCHI_CLUSTER_SIZE))
+  if ((unsigned int) dst < ARCHI_CLUSTER_GLOBAL_ADDR(0) ||
+      (unsigned int) dst >= (ARCHI_CLUSTER_GLOBAL_ADDR(0) + ARCHI_CLUSTER_SIZE))
   {
-    ext2loc = 1;
-    ext_addr = (unsigned int ) src;
-    loc_addr = (unsigned int) dst;
+    ext2loc = 0;
+    ext_addr = (unsigned int) dst;
+    loc_addr = (unsigned int) src;
   }
   else
   {
-    ext2loc = 0;
-    ext_addr = (unsigned int ) dst;
-    loc_addr = (unsigned int) src;
+    ext2loc = 1;
+    ext_addr = (unsigned int) src;
+    loc_addr = (unsigned int) dst;
   }
   
   // TLB prefetch
@@ -78,7 +79,7 @@ hero_dma_memcpy_async(void *dst, void *src, int size)
     pulp_tryread((unsigned *)ext_addr_tmp);
   pulp_tryread((unsigned *)((ext_addr + size - 1) & 0xFFFFFFFC));
   
-  return plp_dma_memcpy_priv(ext_addr,loc_addr,size,ext2loc);
+  return (hero_dma_job_t) plp_dma_memcpy_priv(ext_addr,loc_addr,size,ext2loc);
 }
 
 void
@@ -88,7 +89,7 @@ hero_dma_memcpy(void *dst, void *src, int size)
 }
 
 void
-hero_dma_wait(int id)
+hero_dma_wait(hero_dma_job_t id)
 {
   plp_dma_wait(id);
 }

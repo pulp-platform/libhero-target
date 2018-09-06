@@ -17,16 +17,21 @@
 #ifndef __HERO_API_H__
 #define __HERO_API_H__
 
-#define __WEAK__ __attribute__((weak))
+// #define __WEAK__ __attribute__((weak))
+#define __WEAK__
+
+#include <pulp.h>
+
+typedef int hero_dma_job_t;
 
 __WEAK__ unsigned int hero_tryread(const unsigned int* const addr);
 __WEAK__ int hero_tryread_prefetch(const unsigned int* const addr);
 __WEAK__ void hero_trywrite(unsigned int* const addr, const unsigned int val);
 __WEAK__ int hero_trywrite_prefetch(unsigned int* const addr);
 
-__WEAK__ int hero_dma_memcpy_async(void *dst, void *src, int size);
+__WEAK__ hero_dma_job_t hero_dma_memcpy_async(void *dst, void *src, int size);
 __WEAK__ void hero_dma_memcpy(void *dst, void *src, int size);
-__WEAK__ void hero_dma_wait(int id);
+__WEAK__ void hero_dma_wait(hero_dma_job_t id);
 
 __WEAK__ void *hero_l1malloc(int size);
 __WEAK__ void *hero_l2malloc(int size);

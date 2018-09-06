@@ -23,33 +23,33 @@ INC_DIR  := ../inc
 LIB_DIR  := ../lib
 
 SOURCES  := $(SRC_DIR)/hero-target.c
-CFLAGS   := -Wall -O3 -g -I.
+CFLAGS   := -Wall -O3 -g -include ${PULP_SDK_INSTALL}/hero/hero-z-7045/cl_config.h -I${HERO_PULP_INC_DIR}/archi/chips/bigpulp -I${HERO_PULP_INC_DIR} -DPLATFORM=${PLATFORM} -I.
 CFLAGS_SO:= $(CFLAGS) -shared -fPIC
 
 SO       := $(LIB_DIR)/libhero-target.so
 A        := $(LIB_DIR)/libhero-target.a
 
-.PHONY: all build clean deploy
-
-all: build deploy
+all: build
 
 build: $(SO) $(A)
 
 $(SO): $(SOURCES)
 	mkdir -p $(LIB_DIR)
-	$(foreach l,$(SOURCES),$(CC) -I${INC_DIR} -I${HERO_PULP_INC_DIR} -c $(l) $(CFLAGS_SO);)
+	$(foreach l,$(SOURCES),$(CC) $(CFLAGS_SO) -I${INC_DIR} -c $(l);)
 	$(CC) $(CFLAGS_SO) -o $@ $(addsuffix .o,$(basename $(notdir $(SOURCES))))
 	-rm -rf $(addsuffix .o,$(basename $(notdir $(SOURCES))))
 
 $(A): $(SOURCES)
 	mkdir -p $(LIB_DIR)
-	$(foreach l,$(SOURCES),$(CC) -I${INC_DIR} -I${HERO_PULP_INC_DIR} -c $(l) $(CFLAGS);)
+	$(foreach l,$(SOURCES),$(CC) $(CFLAGS) -I${INC_DIR} -c $(l);)
 	$(AR) rvs -o $@ $(addsuffix .o,$(basename $(notdir $(SOURCES))))
 	-rm -rf $(addsuffix .o,$(basename $(notdir $(SOURCES))))
+
+.PHONY: clean install
 
 clean:
 	-rm -rf $(LIB_DIR) $(SO) $(A)
 	-rm -rf $(addsuffix .o,$(basename $(notdir $(SOURCES))))
 
-deploy:
-	rsync -rv $(LIB_DIR)/* ${HERO_TARGET_HOST}:${HERO_TARGET_PATH_LIB}
+install:
+	scp $(LIB_DIR)/* ${HERO_TARGET_HOST}:${HERO_TARGET_PATH_LIB}

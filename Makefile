@@ -10,8 +10,11 @@ build:
 header:
 	@$(foreach dir,$(dirs), cd $(PWD)/$(dir) &&  make header;)
 
-all: build
+all: header build
 
-.PHONY: clean
+.PHONY: install clean
+install:
+	@$(foreach dir,$(dirs), cd $(PWD)/$(dir) &&  make install;)
+
 clean:
 	@$(foreach dir,$(dirs), cd $(PWD)/$(dir) &&  make clean;)

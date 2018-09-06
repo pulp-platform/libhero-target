@@ -18,12 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned int pulp_tryread(const unsigned int* const addr)
-{
-	return (unsigned int)(*(const volatile unsigned *) addr);
-}
-
-unsigned int hero_svm_tryread(const unsigned int* const addr)
+unsigned int hero_tryread(const unsigned int* const addr)
 {
 	return (unsigned int)(*(const volatile unsigned *) addr);
 }
@@ -46,7 +41,7 @@ hero_trywrite_prefetch(unsigned int* const addr)
 	return 0;
 }
 
-int 
+hero_dma_job_t 
 hero_dma_memcpy_async(void *dst, void *src, int size)
 {
 	memcpy(dst, src, size);
@@ -60,7 +55,7 @@ hero_dma_memcpy(void *dst, void *src, int size)
 }
 
 void
-hero_dma_wait(int id)
+hero_dma_wait(hero_dma_job_t id)
 {
 	return;
 }
