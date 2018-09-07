@@ -2,7 +2,7 @@ ifndef PULP_SDK_HOME
 $(error PULP_SDK_HOME is not set)
 endif
 
-dirs = host hero
+dirs = host pulp
 
 build:
 	@$(foreach dir,$(dirs), cd $(PWD)/$(dir) &&  make build;)
