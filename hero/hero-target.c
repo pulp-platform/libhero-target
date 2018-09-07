@@ -14,10 +14,11 @@
 * limitations under the License.
 */
 
+#include <pulp.h>
 #include <hero-target.h>
-#include <hal/pulp.h>
 #include <libgomp/pulp/memutils.h>
 #include <archi-host/arm/pgtable_hwdef.h>
+#include <vmm/vmm.h>
 
 unsigned int
 hero_tryread(const unsigned int* const addr)
@@ -41,6 +42,12 @@ int
 hero_trywrite_prefetch(unsigned int* const addr)
 {
   return pulp_trywrite_prefetch(addr);
+}
+
+int
+hero_handle_rab_misses(void)
+{
+  return handle_rab_misses();
 }
 
 hero_dma_job_t 
@@ -116,4 +123,10 @@ void
 hero_l2free(void * a)
 {
   l2free(a);
+}
+
+int
+hero_rt_core_id(void)
+{
+  return rt_core_id();
 }

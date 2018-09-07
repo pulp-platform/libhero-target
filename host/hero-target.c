@@ -41,6 +41,12 @@ hero_trywrite_prefetch(unsigned int* const addr)
 	return 0;
 }
 
+int
+hero_handle_rab_misses(void)
+{
+	return 0;
+}
+
 hero_dma_job_t 
 hero_dma_memcpy_async(void *dst, void *src, int size)
 {
@@ -82,4 +88,11 @@ void
 hero_l2free(void * a)
 {
   free(a);
+}
+
+int
+hero_rt_core_id(void)
+{
+  // FIXME: omp_get_thread_num() add cross dependency to omp
+  return 0;
 }
