@@ -20,6 +20,8 @@
 #include <archi-host/arm/pgtable_hwdef.h>
 #include <vmm/vmm.h>
 
+#define PULP_DMA_MAX_XFER_SIZE_B 32768
+
 unsigned int
 hero_tryread(const unsigned int* const addr)
 {
@@ -55,7 +57,10 @@ hero_dma_memcpy_async(void *dst, void *src, int size)
 {
   int ext2loc;
   unsigned int ext_addr_tmp, ext_addr, loc_addr;
+  int size_tmp = size;
+  hero_dma_job_t dma = 0;
 
+  // get direction
   if ((unsigned int) dst < ARCHI_CLUSTER_GLOBAL_ADDR(0) ||
       (unsigned int) dst >= (ARCHI_CLUSTER_GLOBAL_ADDR(0) + ARCHI_CLUSTER_SIZE))
   {
@@ -69,24 +74,41 @@ hero_dma_memcpy_async(void *dst, void *src, int size)
     ext_addr = (unsigned int) src;
     loc_addr = (unsigned int) dst;
   }
-  
-  // TLB prefetch
-  pulp_tryread_prefetch((unsigned *)ext_addr);
-  for (ext_addr_tmp = ( ext_addr & PAGE_MASK) + PAGE_SIZE;
-        ext_addr_tmp < ((ext_addr + size - 1) & PAGE_MASK);
-        ext_addr_tmp += PAGE_SIZE)
-    pulp_tryread_prefetch((unsigned *)ext_addr_tmp);
-  pulp_tryread_prefetch((unsigned *)((ext_addr + size - 1) & 0xFFFFFFFC));
 
-  // TLB tryread
-  pulp_tryread((unsigned *)ext_addr);
-  for (ext_addr_tmp = ( ext_addr & PAGE_MASK) + PAGE_SIZE;
-        ext_addr_tmp < ((ext_addr + size - 1) & PAGE_MASK);
-        ext_addr_tmp += PAGE_SIZE)
-    pulp_tryread((unsigned *)ext_addr_tmp);
-  pulp_tryread((unsigned *)((ext_addr + size - 1) & 0xFFFFFFFC));
+  // we might need to split the transfer into chunks of PULP_DMA_MAX_XFER_SIZE_B
+  while (size > 0) {
+
+    // get XFER size
+    if (size > PULP_DMA_MAX_XFER_SIZE_B)
+      size_tmp = PULP_DMA_MAX_XFER_SIZE_B;
+    else
+      size_tmp = size;
+
+    // TLB prefetch
+    pulp_tryread_prefetch((unsigned *)ext_addr);
+    for (ext_addr_tmp = ( ext_addr & PAGE_MASK) + PAGE_SIZE;
+         ext_addr_tmp < ((ext_addr + size_tmp - 1) & PAGE_MASK);
+         ext_addr_tmp += PAGE_SIZE)
+      pulp_tryread_prefetch((unsigned *)ext_addr_tmp);
+    pulp_tryread_prefetch((unsigned *)((ext_addr + size_tmp - 1) & 0xFFFFFFFC));
+
+    // TLB tryread
+    pulp_tryread((unsigned *)ext_addr);
+    for (ext_addr_tmp = ( ext_addr & PAGE_MASK) + PAGE_SIZE;
+         ext_addr_tmp < ((ext_addr + size_tmp - 1) & PAGE_MASK);
+         ext_addr_tmp += PAGE_SIZE)
+      pulp_tryread((unsigned *)ext_addr_tmp);
+    pulp_tryread((unsigned *)((ext_addr + size_tmp - 1) & 0xFFFFFFFC));
+
+    // just wait for the last one...
+    dma = (hero_dma_job_t)plp_dma_memcpy_priv(ext_addr,loc_addr,size_tmp,ext2loc);
+
+    size     -= size_tmp;
+    ext_addr += size_tmp;
+    loc_addr += size_tmp;
+  }
   
-  return (hero_dma_job_t) plp_dma_memcpy_priv(ext_addr,loc_addr,size,ext2loc);
+  return dma;
 }
 
 void
