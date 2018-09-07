@@ -11,7 +11,7 @@ build:
 header:
 	@$(foreach dir,$(dirs_pulp), cd $(PWD)/$(dir) &&  make header;)
 
-all: header build
+all: header build install
 
 .PHONY: install clean
 install:
