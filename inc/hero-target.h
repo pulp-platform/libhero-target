@@ -22,6 +22,10 @@
 
 #include <pulp.h>
 
+#define BIGPULP_SVM     (0)
+#define BIGPULP_MEMCPY  (1)
+#define HOST            (2)
+
 typedef int hero_dma_job_t;
 
 /** @name SVM-related functions
