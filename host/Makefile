@@ -23,7 +23,7 @@ INC_DIR  := ../inc
 LIB_DIR  := ../lib
 
 SOURCES  := $(SRC_DIR)/hero-target.c
-CFLAGS   := -Wall -O3 -g -include ${PULP_SDK_INSTALL}/hero/hero-z-7045/cl_config.h -I${HERO_PULP_INC_DIR}/archi/chips/bigpulp -I${HERO_PULP_INC_DIR} -DPLATFORM=${PLATFORM} -I.
+CFLAGS   := -Wall -O3 -g -I.
 CFLAGS_SO:= $(CFLAGS) -shared -fPIC
 
 SO       := $(LIB_DIR)/libhero-target.so

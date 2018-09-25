@@ -15,6 +15,7 @@
 */
 
 #include <hero-target.h>
+#include <omp.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -93,6 +94,5 @@ hero_l2free(void * a)
 int
 hero_rt_core_id(void)
 {
-  // FIXME: omp_get_thread_num() add cross dependency to omp
-  return 0;
+  return omp_get_thread_num();
 }

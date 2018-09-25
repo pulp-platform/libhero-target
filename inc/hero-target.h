@@ -17,11 +17,6 @@
 #ifndef __HERO_API_H__
 #define __HERO_API_H__
 
-// #define __WEAK__ __attribute__((weak))
-#define __WEAK__
-
-#include <pulp.h>
-
 #define BIGPULP_SVM     (0)
 #define BIGPULP_MEMCPY  (1)
 #define HOST            (2)
@@ -41,7 +36,7 @@ typedef int hero_dma_job_t;
 
   \return  The data stored at that address.
  */
-__WEAK__ unsigned int hero_tryread(const unsigned int* const addr);
+unsigned int hero_tryread(const unsigned int* const addr);
 
 /** Used by PULP to try to read from a memory address without blocking in case it misses in the RAB
     and without causing a memory transaction. This function can be used to trigger the setup of a
@@ -54,7 +49,7 @@ __WEAK__ unsigned int hero_tryread(const unsigned int* const addr);
   \return  0 if the read would succeed (i.e., a slice in the RAB exists for this address); 1 if
            the read resulted in a RAB miss; negative value with an errno on errors.
  */
-__WEAK__ int hero_tryread_prefetch(const unsigned int* const addr);
+int hero_tryread_prefetch(const unsigned int* const addr);
 
 /** Used by PULP to securely write to an address in SVM and block until the write completes.
 
@@ -63,7 +58,7 @@ __WEAK__ int hero_tryread_prefetch(const unsigned int* const addr);
   \param   addr  The address to which data shall be written.
   \param   val   The value that shall be written.
  */
-__WEAK__ void hero_trywrite(unsigned int* const addr, const unsigned int val);
+void hero_trywrite(unsigned int* const addr, const unsigned int val);
 
 /** Used by PULP to Try to write to a memory address without blocking in case it misses in the RAB
     and without causing a memory transaction. This function can be used to trigger the setup of a
@@ -76,7 +71,7 @@ __WEAK__ void hero_trywrite(unsigned int* const addr, const unsigned int val);
   \return  0 if the write would succeed (i.e., a slice in the RAB exists for this address); 1 if
            the write resulted in a RAB miss; negative value with an errno on errors.
  */
-__WEAK__ int hero_trywrite_prefetch(unsigned int* const addr);
+int hero_trywrite_prefetch(unsigned int* const addr);
 
 /** Used by PULP to handle all outstanding RAB misses (if there are any).
 
@@ -85,7 +80,7 @@ __WEAK__ int hero_trywrite_prefetch(unsigned int* const addr);
   \return  0 on success; negative value with an errno on errors. -ENOENT is returned in case no
            misses were outstanding.
  */
-__WEAK__ int hero_handle_rab_misses(void);
+int hero_handle_rab_misses(void);
 
 //!@}
 
@@ -105,7 +100,7 @@ __WEAK__ int hero_handle_rab_misses(void);
 
   \return  DMA job ID; This can be used with hero_dma_wait to wait for the completion of this transfer.
  */
-__WEAK__ hero_dma_job_t hero_dma_memcpy_async(void *dst, void *src, int size);
+hero_dma_job_t hero_dma_memcpy_async(void *dst, void *src, int size);
 
 /** Used by PULP to perform a blocking memcpy using the DMA engine from the cluster-internal L1
     scratchpad memory to cluster-external memory (L1 of another cluster, L2, SVM).
@@ -116,7 +111,7 @@ __WEAK__ hero_dma_job_t hero_dma_memcpy_async(void *dst, void *src, int size);
   \param   src  The source address from which the data shall be copied.
   \param   size The amount of data that shall be copied in Bytes.
  */
-__WEAK__ void hero_dma_memcpy(void *dst, void *src, int size);
+void hero_dma_memcpy(void *dst, void *src, int size);
 
 /** Used by PULP to wait for a previously issued memcpy/DMA transfer to finish.
 
@@ -124,7 +119,7 @@ __WEAK__ void hero_dma_memcpy(void *dst, void *src, int size);
 
   \param   id   The DMA job ID previously obtained from hero_dma_memcpy_async().
  */
-__WEAK__ void hero_dma_wait(hero_dma_job_t id);
+void hero_dma_wait(hero_dma_job_t id);
 
 //!@}
 
@@ -142,7 +137,7 @@ __WEAK__ void hero_dma_wait(hero_dma_job_t id);
   \return  A pointer to the allocated memory chunk; NULL is returned in case the memory chunk could
            not be allocated.
  */
-__WEAK__ void *hero_l1malloc(int size);
+void *hero_l1malloc(int size);
 
 /** Used by PULP to allocate a chunk of memory inside the shared L2 scratchpad memory.
 
@@ -153,7 +148,7 @@ __WEAK__ void *hero_l1malloc(int size);
   \return  A pointer to the allocated memory chunk; NULL is returned in case the memory chunk could
            not be allocated.
  */
-__WEAK__ void *hero_l2malloc(int size);
+void *hero_l2malloc(int size);
 
 /** Used by PULP to free a chunk of memory inside the shared L1 scratchpad memory.
 
@@ -161,7 +156,7 @@ __WEAK__ void *hero_l2malloc(int size);
 
   \param   a The start address of the chunk to be freed.
  */
-__WEAK__ void hero_l1free(void * a);
+void hero_l1free(void * a);
 
 /** Used by PULP to free a chunk of memory inside the shared L2 scratchpad memory.
 
@@ -169,7 +164,7 @@ __WEAK__ void hero_l1free(void * a);
 
   \param   a The start address of the chunk to be freed.
  */
-__WEAK__ void hero_l2free(void * a);
+void hero_l2free(void * a);
 
 //!@}
 
@@ -182,9 +177,9 @@ __WEAK__ void hero_l2free(void * a);
 
   \return  The core ID.
  */
-__WEAK__ int hero_rt_core_id();
-//FIXME: __WEAK__ hero_rt_info();
-//FIXME: __WEAK__ hero_rt_error();
+int hero_rt_core_id();
+//FIXME: hero_rt_info();
+//FIXME: hero_rt_error();
 
 //!@}
 
