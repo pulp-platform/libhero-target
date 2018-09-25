@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#include <pulp.h>
 #include <hero-target.h>
+#include <pulp.h>
 #include <libgomp/pulp/memutils.h>
 #include <archi-host/arm/pgtable_hwdef.h>
 #include <vmm/vmm.h>
