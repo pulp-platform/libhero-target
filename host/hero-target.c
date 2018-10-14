@@ -96,3 +96,27 @@ hero_rt_core_id(void)
 {
   return omp_get_thread_num();
 }
+
+void
+hero_rt_start_cycle_cnt()
+{
+	return;
+}
+
+void
+hero_rt_reset_cycle_cnt()
+{
+	return;
+}
+
+void
+hero_rt_stop_cycle_cnt()
+{
+	return;
+}
+
+int
+hero_rt_get_cycles()
+{
+  return 0x0;
+}
