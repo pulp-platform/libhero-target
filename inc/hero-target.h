@@ -178,6 +178,44 @@ void hero_l2free(void * a);
   \return  The core ID.
  */
 int hero_rt_core_id();
+
+/** Start the processor cycle counter.
+
+    Start to commute the cycle counter. Note, at boot, the starting value is unpredictable because the counter is not automatically resetted during the `hero_rt_start_cycle_cnt` function. Reset must be manually controlled by the user. Following, the correct initialization sequence for the cycle counter:
+
+    ```
+    hero_rt_reset_cycle_cnt();
+    hero_rt_start_cycle_cnt();
+    ```
+
+  \return  void.
+ */
+void hero_rt_start_cycle_cnt();
+
+/** Reset the processor cycle counter.
+
+    Reset to 0 the processor cycle counter value.
+
+  \return  void.
+ */
+void hero_rt_reset_cycle_cnt();
+
+/** Stop the processor cycle counter.
+
+    Stop the processor cycle counter commutation. The cycle counter value can be readed using the function `hero_rt_get_cycles()`. The cycles counting can be resumed using the function `hero_rt_start_cycles_cnt()`.
+
+    Note. The counter value must be resetted manually by the user.
+
+  \return  void.
+ */
+void hero_rt_stop_cycle_cnt();
+
+/** Get the processor cycle counter value.
+
+  \return  the current cycle counter value, or 0 if unavailable.
+ */
+int hero_rt_get_cycles();
+
 //FIXME: hero_rt_info();
 //FIXME: hero_rt_error();
 

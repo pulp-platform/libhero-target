@@ -152,3 +152,27 @@ hero_rt_core_id(void)
 {
   return rt_core_id();
 }
+
+void
+hero_rt_start_cycle_cnt()
+{
+  start_timer();
+}
+
+void
+hero_rt_reset_cycle_cnt()
+{
+  reset_timer();
+}
+
+void
+hero_rt_stop_cycle_cnt()
+{
+  stop_timer();
+}
+
+int
+hero_rt_get_cycles()
+{
+  return get_time();
+}
