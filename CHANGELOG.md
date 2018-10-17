@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](http://semver.org).
 
+## v1.2.0 - 2018-10-17
+### Changed
+- Added API to access HW cycles counters.
+
+
 ## v1.1.0 - 2018-09-25
 ### Fixed
 - Fix [#22](https://github.com/pulp-platform/hero-sdk/issues/22)
