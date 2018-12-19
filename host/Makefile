@@ -22,8 +22,8 @@ SRC_DIR  := .
 INC_DIR  := ../inc
 LIB_DIR  := ../lib
 
-SOURCES  := $(SRC_DIR)/hero-target.c
-CFLAGS   := -Wall -O3 -g -I.
+SOURCES  := $(SRC_DIR)/hero-target.c  $(SRC_DIR)/hero-builtins.c
+CFLAGS   := -Wall -O3 -g -I. -flto
 CFLAGS_SO:= $(CFLAGS) -shared -fPIC
 
 SO       := $(LIB_DIR)/libhero-target.so

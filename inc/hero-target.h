@@ -17,6 +17,8 @@
 #ifndef __HERO_API_H__
 #define __HERO_API_H__
 
+#include "hero-builtins.h"
+
 #define BIGPULP_SVM     (0)
 #define BIGPULP_MEMCPY  (1)
 #define HOST            (2)

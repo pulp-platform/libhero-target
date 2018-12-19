@@ -1,9 +1,10 @@
 PULP_PROPERTIES += pulp_chip
 include $(PULP_SDK_HOME)/install/rules/pulp_properties.mk
 
-PULP_LIBS                  = hero-target
-PULP_LIB_CL_SRCS_hero-target += hero-target.c
-PULP_CL_CFLAGS_hero-target    = -Wall -O3 -g3 -I../inc
+PULP_LIBS                     = hero-target
+PULP_LIB_CL_SRCS_hero-target += hero-target.c hero-builtins.c
+PULP_CL_CFLAGS_hero-target    = -Wall -O3 -g3 -flto -I../inc
+PULP_LDFLAGS += -flto
 
 -include $(PULP_SDK_HOME)/install/rules/pulp.mk
 
