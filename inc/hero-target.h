@@ -181,6 +181,24 @@ int hero_rt_core_id();
 //FIXME: hero_rt_info();
 //FIXME: hero_rt_error();
 
+/** Calls the runtime function reset_timer() on PULP, does nothing on the HOST.
+*/
+void hero_reset_timer(void);
+
+/** Calls the runtime function start_timer() on PULP, does nothing on the HOST.
+*/
+void hero_start_timer(void);
+
+/** Calls the runtime function stop_timer() on PULP, does nothing on the HOST.
+*/
+void hero_stop_timer(void);
+
+/** Calls the runtime function get_time() on PULP, does nothing on the HOST.
+
+   \return  The cycles counted by the timer on PULP, 0 on the HOST.
+*/
+int hero_get_time(void);
+
 //!@}
 
 #endif

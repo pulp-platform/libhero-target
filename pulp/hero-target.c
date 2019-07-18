@@ -152,3 +152,19 @@ hero_rt_core_id(void)
 {
   return rt_core_id();
 }
+
+void hero_reset_timer(void) {
+    reset_timer();
+}
+
+void hero_start_timer(void) {
+    start_timer();
+}
+
+void hero_stop_timer(void) {
+    stop_timer();
+}
+
+int hero_get_time(void) {
+    return get_time();
+}

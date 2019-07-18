@@ -96,3 +96,13 @@ hero_rt_core_id(void)
 {
   return omp_get_thread_num();
 }
+
+void hero_reset_timer(void) {}
+
+void hero_start_timer(void) {}
+
+void hero_stop_timer(void) {}
+
+int hero_get_time(void) {
+    return 0;
+}
