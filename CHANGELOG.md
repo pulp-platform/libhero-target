@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 [Semantic Versioning](http://semver.org).
 
 ## v1.2.0 - 2018-10-17
+### Fixed
+- Fix [#8](https://github.com/pulp-platform/libhero-target/issues/8). Fixed `hero_dma_memcpy_async` API. In case of big memory transfers, some DMA job were leacked, resulting on the termination of DMA channels available.
+
 ### Changed
 - Added API to access HW cycles counters.
 
