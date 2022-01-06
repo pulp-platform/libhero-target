@@ -58,7 +58,8 @@ hero_dma_memcpy_async(void *dst, void *src, int size)
   int ext2loc;
   unsigned int ext_addr_tmp, ext_addr, loc_addr;
   int size_tmp = size;
-  hero_dma_job_t dma = 0;
+  hero_dma_job_t dma_job = plp_dma_counter_alloc();
+  uin32_t dma_cmd;
 
   // get direction
   if ((unsigned int) dst < ARCHI_CLUSTER_GLOBAL_ADDR(0) ||
@@ -100,15 +101,17 @@ hero_dma_memcpy_async(void *dst, void *src, int size)
       pulp_tryread((unsigned *)ext_addr_tmp);
     pulp_tryread((unsigned *)((ext_addr + size_tmp - 1) & 0xFFFFFFFC));
 
-    // just wait for the last one...
-    dma = (hero_dma_job_t)plp_dma_memcpy_priv(ext_addr,loc_addr,size_tmp,ext2loc);
+    //dma_job = (hero_dma_job_t)plp_dma_memcpy_priv(ext_addr,loc_addr,size_tmp,ext2loc);
+    dma_cmd = plp_dma_getCmd(ext2loc, size, PLP_DMA_1D, PLP_DMA_TRIG_EVT, PLP_DMA_NO_TRIG_IRQ, PLP_DMA_PRIV);
+    __asm__ __volatile__ ("" : : : "memory");
+    plp_dma_cmd_push(dma_cmd, loc_addr, ext_addr);
 
     size     -= size_tmp;
     ext_addr += size_tmp;
     loc_addr += size_tmp;
   }
   
-  return dma;
+  return dma_job;
 }
 
 void
@@ -151,4 +154,28 @@ int
 hero_rt_core_id(void)
 {
   return rt_core_id();
+}
+
+void
+hero_rt_start_cycle_cnt()
+{
+  start_timer();
+}
+
+void
+hero_rt_reset_cycle_cnt()
+{
+  reset_timer();
+}
+
+void
+hero_rt_stop_cycle_cnt()
+{
+  stop_timer();
+}
+
+int
+hero_rt_get_cycles()
+{
+  return get_time();
 }
